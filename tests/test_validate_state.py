@@ -48,6 +48,16 @@ def test_missing_file_is_invalid_for_concept():
     assert any("not found" in e for e in errors)
 
 
+def test_mastered_concept_with_non_string_evidence_returns_error_not_crash():
+    errors = validate("tests/fixtures/invalid/concept-mastered-list-evidence.md", "concept")
+    assert any("evidence" in e for e in errors)
+
+
+def test_config_with_non_string_enum_field_returns_error_not_crash():
+    errors = validate("tests/fixtures/invalid/config-list-enum.md", "config")
+    assert any("session_length_hint" in e for e in errors)
+
+
 def test_infer_kind_for_every_path_shape():
     from tools.validate_state import infer_kind
 

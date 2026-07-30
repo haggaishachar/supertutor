@@ -101,14 +101,23 @@ def validate(path, kind):
 
 def _validate_config(fm):
     errors = []
-    if "mastery_threshold" in fm and not isinstance(fm["mastery_threshold"], int):
+    if "mastery_threshold" in fm and (
+        not isinstance(fm["mastery_threshold"], int)
+        or isinstance(fm["mastery_threshold"], bool)
+    ):
         errors.append("mastery_threshold: must be an integer")
-    if "session_length_hint" in fm and fm["session_length_hint"] not in SESSION_LENGTH_HINTS:
-        errors.append(
-            f"session_length_hint: must be one of {sorted(SESSION_LENGTH_HINTS)}"
-        )
-    if "review_cadence" in fm and fm["review_cadence"] not in REVIEW_CADENCES:
-        errors.append(f"review_cadence: must be one of {sorted(REVIEW_CADENCES)}")
+    if "session_length_hint" in fm:
+        if not isinstance(fm["session_length_hint"], str):
+            errors.append("session_length_hint: must be a string")
+        elif fm["session_length_hint"] not in SESSION_LENGTH_HINTS:
+            errors.append(
+                f"session_length_hint: must be one of {sorted(SESSION_LENGTH_HINTS)}"
+            )
+    if "review_cadence" in fm:
+        if not isinstance(fm["review_cadence"], str):
+            errors.append("review_cadence: must be a string")
+        elif fm["review_cadence"] not in REVIEW_CADENCES:
+            errors.append(f"review_cadence: must be one of {sorted(REVIEW_CADENCES)}")
     return errors
 
 
@@ -129,9 +138,11 @@ def _validate_concept(fm):
             errors.append(f"{field}: required")
     if "state" in fm and fm["state"] not in CONCEPT_STATES:
         errors.append(f"state: must be one of {sorted(CONCEPT_STATES)}")
-    if fm.get("state") == "mastered":
+    if fm.get("state") == "mastered" and "evidence" in fm:
         evidence = fm.get("evidence") or ""
-        if not evidence.strip():
+        if not isinstance(evidence, str):
+            errors.append("evidence: must be a string")
+        elif not evidence.strip():
             errors.append("evidence: required and non-empty when state is mastered")
         elif _is_self_report(evidence):
             errors.append("evidence: reads as self-report, not a specific demonstration")

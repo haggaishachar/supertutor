@@ -1,0 +1,30 @@
+# supertutor-skills
+
+Process discipline for one-on-one tutoring, the way [superpowers](https://github.com/obra/superpowers)
+is process discipline for software engineering.
+
+## Install (Claude Code)
+
+Add this repo as a local plugin marketplace and install it:
+
+```
+/plugin marketplace add /path/to/this/repo
+/plugin install supertutor-skills@local
+```
+
+Then start a session and say what you want to learn. `using-supertutor` routes you
+to the right skill from there.
+
+## What this is
+
+14 Agent Skills plus 6 pedagogy strategies enforcing a teaching loop: set an
+observable goal, diagnose what the learner already knows, teach with an
+explicit strategy, verify mastery with real evidence (never self-report),
+and schedule spaced review. See `docs/superpowers/specs/
+2026-07-30-supertutor-layer1-skills-design.md` for the full design.
+
+## Learner state
+
+Everything the tutor knows about a learner lives in a `learner/` directory of
+plain markdown files — see the design spec, section 6, for the schema. Run
+`pytest tests/` to validate any learner directory against the schema.

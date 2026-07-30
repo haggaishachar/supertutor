@@ -568,7 +568,7 @@ Expected RED: subagent either responds in English, or responds in Hebrew but at 
 ```markdown
 ---
 name: adapting-to-the-learner
-description: Use on first contact with a learner and whenever their register, age, or language doesn't match what learner/profile.md records - establishes and maintains the learner's language, age register, and analogy interests.
+description: Use when a learner makes first contact, or whenever their register, age, or language doesn't match what learner/profile.md records - establishes and maintains the learner's language, age register, and analogy interests.
 ---
 
 # Adapting to the Learner

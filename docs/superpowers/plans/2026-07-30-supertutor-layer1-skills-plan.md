@@ -1018,7 +1018,23 @@ near-identical attempts, switch to `scaffolding` rather than repeating a
 third worked example.
 ```
 
-- [ ] **Step 2: Commit**
+- [ ] **Step 2: Verify the strategy**
+
+`running-a-teaching-loop` doesn't exist yet at this point in the build
+order, so verify the strategy file standalone: dispatch a subagent with
+only this file's content pasted as its instructions, plus: *"Using only
+the instructions above, teach a learner (first exposure, no prior
+attempts) the concept 'multiplying two-digit numbers using the standard
+algorithm.'"*
+
+Pass rubric:
+- Shows one fully worked example with the reasoning narrated at each step,
+  not just the mechanical steps.
+- Follows with a practice problem that's near-identical in structure
+  (different numbers, same method) — not a jump to an unaided/independent
+  problem.
+
+- [ ] **Step 3: Commit**
 
 ```bash
 git add skills/selecting-a-pedagogy/strategies/worked-examples.md
@@ -1403,7 +1419,29 @@ conceptual, not procedural, and more scaffolding of the same procedure won't
 close it.
 ```
 
-- [ ] **Step 2: Commit**
+- [ ] **Step 2: Verify the strategy**
+
+By this point `running-a-teaching-loop` (Task 9) and `selecting-a-pedagogy`
+(Task 12) exist. Dispatch a subagent with `running-a-teaching-loop`'s
+SKILL.md, `selecting-a-pedagogy`'s SKILL.md, and both strategy files
+(`worked-examples.md`, `scaffolding.md`) pasted as context, plus a concept
+file showing `strategies_tried: [worked-examples]` and `state: shaky` for
+the concept "long division" (procedural). Ask it to continue teaching.
+
+Run a second dispatch with the same skills/strategies but a concept file
+for "why does a negative number times a negative number equal a positive
+number" (conceptual), same `strategies_tried`/`state` shape.
+
+Pass rubric, both dispatches:
+- `selecting-a-pedagogy` selects `scaffolding` (matches `worked-examples`'
+  fallback condition — tried once already).
+- The execution shows partial structure (fill-in-the-blank steps or a
+  half-solved problem), not a full worked example and not a blank
+  independent problem.
+- The scaffolding visibly reduces across successive attempts within the
+  session (fading), rather than staying constant.
+
+- [ ] **Step 3: Commit**
 
 ```bash
 git add skills/selecting-a-pedagogy/strategies/scaffolding.md
@@ -1453,7 +1491,27 @@ If three questions in a row produce no forward movement, switch to
 questions about them are productive.
 ```
 
-- [ ] **Step 2: Commit**
+- [ ] **Step 2: Verify the strategy**
+
+Dispatch a subagent with `running-a-teaching-loop`'s SKILL.md,
+`selecting-a-pedagogy`'s SKILL.md, and all three strategy files so far
+(`worked-examples.md`, `scaffolding.md`, `socratic.md`) pasted as context,
+plus a concept file for "why does a negative number times a negative
+number equal a positive number" (conceptual) showing
+`strategies_tried: [scaffolding, scaffolding, scaffolding]` — i.e.
+scaffolding's three-fades fallback has been met. Ask it to continue
+teaching.
+
+Pass rubric:
+- `selecting-a-pedagogy` selects `socratic` (matches `scaffolding`'s
+  fallback condition).
+- The execution is a chain of questions, not an explanation or lecture —
+  if the transcript contains the tutor stating the answer or reasoning
+  before the learner does, this fails.
+- At least one question in the chain visibly follows from the learner's
+  own prior answer rather than being a fixed, pre-scripted sequence.
+
+- [ ] **Step 3: Commit**
 
 ```bash
 git add skills/selecting-a-pedagogy/strategies/socratic.md
@@ -1504,7 +1562,26 @@ re-running `worked-examples` from a first-exposure assumption — the learner
 has seen this before, even if it didn't stick.
 ```
 
-- [ ] **Step 2: Commit**
+- [ ] **Step 2: Verify the strategy**
+
+Dispatch a subagent with `running-a-teaching-loop`'s SKILL.md,
+`selecting-a-pedagogy`'s SKILL.md, and all four strategy files so far
+pasted as context, plus a concept file for "long division" (procedural)
+with `state: known` and a `reviews.md` entry showing it's due today. Ask
+it to run today's session.
+
+Run a second dispatch with a concept file for "limits of sequences"
+(conceptual), `state: mastered`, also due today.
+
+Pass rubric, both dispatches:
+- `selecting-a-pedagogy` selects `retrieval-practice`.
+- The tutor asks the learner to recall/apply the concept directly — no
+  re-teaching, reminder, or re-explanation given before the practice
+  problem.
+- No hint is offered unless the transcript shows the learner as fully
+  stuck (not merely slow).
+
+- [ ] **Step 3: Commit**
 
 ```bash
 git add skills/selecting-a-pedagogy/strategies/retrieval-practice.md
@@ -1554,7 +1631,23 @@ practicing each concept separately until each is solid on its own, then
 reintroduce interleaving.
 ```
 
-- [ ] **Step 2: Commit**
+- [ ] **Step 2: Verify the strategy**
+
+Dispatch a subagent with `running-a-teaching-loop`'s SKILL.md,
+`selecting-a-pedagogy`'s SKILL.md, and all five strategy files so far
+pasted as context, plus two concept files both due today per
+`reviews.md`: "long division" (procedural, `state: known`) and "limits of
+sequences" (conceptual, `state: mastered`). Ask it to run today's review
+session.
+
+Pass rubric:
+- `selecting-a-pedagogy` selects `interleaving` (two concepts due
+  together).
+- The resulting practice problems alternate between the two concepts
+  (e.g. long-division problem, then a limits problem, then back) rather
+  than fully completing one concept's practice before starting the other.
+
+- [ ] **Step 3: Commit**
 
 ```bash
 git add skills/selecting-a-pedagogy/strategies/interleaving.md
@@ -1608,7 +1701,27 @@ model is even correct, rather than continuing to drill against a
 misdiagnosed gap.
 ```
 
-- [ ] **Step 2: Commit**
+- [ ] **Step 2: Verify the strategy**
+
+Dispatch a subagent with `running-a-teaching-loop`'s SKILL.md,
+`selecting-a-pedagogy`'s SKILL.md, and all six strategy files pasted as
+context, plus a `goals.md` for "long division" (procedural) with an
+unmet mastery criterion, and a concept file showing
+`strategies_tried: [scaffolding]` with partial progress noted in
+`evidence`. Ask it to continue teaching. Run a second dispatch with
+"limits of sequences" (conceptual), `strategies_tried: [socratic]`, same
+partial-progress shape.
+
+Pass rubric, both dispatches:
+- `selecting-a-pedagogy` selects `mastery-learning` (partial progress from
+  a prior strategy, goal criteria not yet met).
+- The practice problems presented are varied (different surface details),
+  not the exact same problem repeated.
+- The transcript does not claim the learner has mastered the concept —
+  that determination belongs to `mastery-before-advancing` alone, not to
+  this strategy's execution.
+
+- [ ] **Step 3: Commit**
 
 ```bash
 git add skills/selecting-a-pedagogy/strategies/mastery-learning.md

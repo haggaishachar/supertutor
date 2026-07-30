@@ -37,7 +37,7 @@ Language is a first-class learner attribute, not a translation layer bolted on a
 
 ## 4. Layer 1: skill inventory
 
-Thirteen skills (well under the 20-per-agent ceiling on the Layer-2 side).
+Fourteen skills (well under the 20-per-agent ceiling on the Layer-2 side — see §5 for why pedagogy strategies don't add to this count).
 
 | Skill | Enforces |
 |---|---|
@@ -46,7 +46,8 @@ Thirteen skills (well under the 20-per-agent ceiling on the Layer-2 side).
 | `planning-a-curriculum` | Prerequisite-ordered units, each with an exit check |
 | `diagnosing-prior-knowledge` | Elicit the learner's current model before explaining |
 | `assessment-first-teaching` | Mastery check written before the unit is taught |
-| `running-a-teaching-loop` | Worked example → faded practice → independent; cognitive load management |
+| `selecting-a-pedagogy` | Chooses and logs a teaching strategy for the unit — see §5 |
+| `running-a-teaching-loop` | Executes the selected strategy: worked example → faded practice → independent; cognitive load management |
 | `withholding-the-answer` | Hint ladders and productive struggle — and when to just tell |
 | `diagnosing-errors` | Trace a wrong answer to its root misconception, don't just mark it wrong |
 | `mastery-before-advancing` | Demonstration required to advance; self-report is not evidence |
@@ -55,7 +56,25 @@ Thirteen skills (well under the 20-per-agent ceiling on the Layer-2 side).
 | `spaced-review` | Retrieval-practice scheduling and interleaving |
 | `updating-the-learner-model` | The commit — what's known/shaky/broken, with evidence |
 
-## 5. State contract
+## 5. Pedagogy strategy system
+
+Teaching strategy is pluggable, not baked into `running-a-teaching-loop`'s behavior. This closes the "pedagogy agnostic" gap identified when comparing against a model-agnostic framework design, without adopting that design's typed-interface approach — the interface here is a document contract, not a class.
+
+**Why strategies are reference files, not skills.** A pluggable strategy could be modeled as its own Agent Skill, but Managed Agents caps an agent at 20 skills, and the 14 process skills above already claim most of that budget before subject variety is considered. Instead, strategies live as reference files inside `selecting-a-pedagogy`'s and `running-a-teaching-loop`'s skill directories (the same "heavy reference / reusable tool" pattern superpowers itself uses for supporting files). Adding a strategy means adding a file, not registering a new skill or reconfiguring the agent — so the extensibility goal is met without the skill-count cost.
+
+**The strategy file contract.** Every strategy file answers the same five questions, so `selecting-a-pedagogy` can reason about any of them uniformly:
+
+- **When to select it** — trigger conditions (concept type, learner state, what's already been tried and failed)
+- **What it does** — the behavioral shape it produces (e.g., worked example before independent attempt; a chain of narrowing questions; deliberately hard unscaffolded problem first)
+- **Inputs it needs** — concept, misconception (if any), learner state, prior strategies tried on this concept
+- **Composition** — what it pairs well with (e.g., worked-examples → faded scaffolding is a natural sequence) and what it conflicts with
+- **Fallback** — what "not landing" looks like for this strategy (e.g., three failed Socratic turns) and what to switch to
+
+**Initial strategy set:** `worked-examples`, `scaffolding`, `socratic`, `retrieval-practice`, `interleaving`, `mastery-learning`. Chosen as the smallest set that covers both concept-introduction and consolidation phases, keeping the baseline-testing burden (§8) proportional to the rest of the build. `inquiry-based`, `deliberate-practice`, `productive-failure`, and `feynman` follow the same file contract and are explicitly future additions, not a closed set — a third party (or a future you) can drop in a new strategy file without touching any other skill.
+
+**Selection is explicit and logged, not an invisible model judgment call.** `selecting-a-pedagogy` runs once per unit (not per turn), reads the concept, the learner's current state, and `strategies_tried` on that concept (see §6), picks a strategy per the trigger conditions above, and writes the choice plus a one-line reason to the session log. This is what makes strategy selection inspectable and what lets `selecting-a-pedagogy` avoid re-trying a strategy that already failed on this concept.
+
+## 6. State contract
 
 ```
 learner/
@@ -79,12 +98,15 @@ state: unknown | shaky | known | mastered
 evidence: solved 3 unseen ε-N proofs unaided, 2026-07-28
 last_assessed: 2026-07-28
 next_review: 2026-08-11
+strategies_tried: [worked-examples, socratic]
 ---
 ```
 
+`strategies_tried` is append-only and written by `selecting-a-pedagogy` each time it picks a strategy for this concept — it's the memory that keeps strategy selection from repeating what already failed, and it's the field a future cross-learner analytics feature (Layer 2, not this spec) would read to ask "which strategies actually work."
+
 **Governing rule:** `state: mastered` may be written only by `mastery-before-advancing`, and only with a non-empty `evidence:` line naming a specific demonstration — never "learner said they understood." This is the one piece of schema-level enforcement standing in for the fact that there's no free test oracle for learning.
 
-## 6. Layer 2: service architecture (reference — not part of Layer 1's contract)
+## 7. Layer 2: service architecture (reference — not part of Layer 1's contract)
 
 Included so Layer 1's design can be checked against a real consumer, without leaking into Layer 1 itself.
 
@@ -94,15 +116,17 @@ Included so Layer 1's design can be checked against a real consumer, without lea
 - **Dashboard:** reads the memory store directly (list/read memories, list memory versions) — no separate database of learner state.
 - **Minimum web surface:** auth, goal-setting flow, streamed tutoring view, progress view, billing.
 
-## 7. Testing approach
+## 8. Testing approach
 
 Per superpowers' `writing-skills` discipline: each skill gets a baseline run (observe an agent fail without the skill) before being written. Adversarial learner personas for baselining: the negotiator ("just tell me"), the false-confident ("yeah, got it"), the silent one, and the plausibly-wrong (coherent but incorrect mental model) — the last is what `diagnosing-errors` exists for.
 
-**Build order** (dependency-driven, so a partial build stays coherent): state contract → `assessment-first-teaching` + `running-a-teaching-loop` → `mastery-before-advancing` + `diagnosing-errors` → `resisting-difficulty-negotiation` → `spaced-review`. Thirteen independent baselines is the real schedule risk in this plan; if time is short, cut from the end of this order, not from the middle.
+**Strategy files get a lighter-weight check than skills**, since they're not independently invoked: does `selecting-a-pedagogy` choose a defensible strategy for a given concept/state pair, and does `running-a-teaching-loop` execute the chosen strategy's behavioral shape rather than defaulting to whichever one the model reaches for unprompted. Test against at least two concepts per strategy (one procedural, one conceptual) rather than baselining each strategy file as heavyweight as a full skill.
 
-## 8. Explicit non-goals (this spec)
+**Build order** (dependency-driven, so a partial build stays coherent): state contract → `assessment-first-teaching` + `running-a-teaching-loop` (with one strategy — `worked-examples` — wired through end to end) → `selecting-a-pedagogy` + remaining strategy files → `mastery-before-advancing` + `diagnosing-errors` → `resisting-difficulty-negotiation` → `spaced-review`. Fourteen skills plus six strategy files is the real schedule risk in this plan; if time is short, cut additional strategy files first (the contract supports adding them later without touching other skills), then cut from the end of the skill order, not the middle.
+
+## 9. Explicit non-goals (this spec)
 
 - Layer-2 UI/UX design, pricing, and business model.
 - A teacher/parent-facing role (out of scope per the brainstorming decision: learner is the sole operator).
 - Per-subject content or curricula — Layer 1 supplies the teaching *process*, not subject material.
-- Any Layer-2 code, schema, or infrastructure beyond the reference sketch in §6.
+- Any Layer-2 code, schema, or infrastructure beyond the reference sketch in §7.

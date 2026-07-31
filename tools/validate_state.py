@@ -88,7 +88,11 @@ def _is_self_report(evidence):
 
 def infer_kind(path):
     """Infer the schema `kind` for a state file from its path, relative to
-    the `learner/` root (e.g. `learner/topics/<topic>/knowledge/<c>.md`)."""
+    the `learner/` root (e.g. `learner/topics/<topic>/knowledge/<c>.md`).
+
+    Returns None for a path shape that doesn't match any known kind, rather
+    than raising — callers looping over a directory glob (e.g. a stray file
+    under `learner/`) should treat that as "skip", not a crash."""
     normalized = path.replace(os.sep, "/")
     parts = normalized.split("/")
     filename = parts[-1]
@@ -108,7 +112,7 @@ def infer_kind(path):
         return "misconception"
     if "log" in parts:
         return "log"
-    raise ValueError(f"cannot infer kind for path: {path}")
+    return None
 
 
 def validate(path, kind):

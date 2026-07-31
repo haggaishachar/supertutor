@@ -90,3 +90,9 @@ def test_infer_kind_for_every_path_shape():
     }
     for path, expected_kind in cases.items():
         assert infer_kind(path) == expected_kind, path
+
+
+def test_infer_kind_returns_none_for_unrecognized_path():
+    from tools.validate_state import infer_kind
+
+    assert infer_kind("learner/topics/calculus-limits/README.md") is None

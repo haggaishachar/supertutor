@@ -7,6 +7,7 @@ against the schemas defined in docs/superpowers/specs/
 """
 
 import os
+import re
 
 import yaml
 
@@ -17,6 +18,13 @@ REVIEW_CADENCES = {"relaxed", "standard", "aggressive"}
 # Files that are allowed to be absent entirely — everything else must exist.
 OPTIONAL_KINDS = {"config", "profile"}
 
+# NOTE: this is an English-phrase heuristic only — it will not catch
+# self-report evidence written in other languages. It exists as a mechanical
+# backstop, not the primary enforcement mechanism: the real rule that
+# `state: mastered` requires a specific demonstration, not a self-report, is
+# enforced by the `mastery-before-advancing` skill at write time (a human/LLM
+# judgment call). This validator cannot substitute for that in general — it
+# only catches the specific English phrasings listed below.
 SELF_REPORT_PHRASES = [
     "learner said",
     "learner reported",
@@ -25,6 +33,11 @@ SELF_REPORT_PHRASES = [
     "i understand",
     "got it",
 ]
+
+# "got it" alone reads as self-report, but "got it right"/"got it correct"/
+# etc. is legitimate evidence describing an outcome (e.g. "solved 3 unseen
+# problems and got it right unaided") — don't flag those.
+_GOT_IT_SAFE_FOLLOWERS = ("right", "correct", "wrong", "backwards")
 
 
 class FrontmatterError(Exception):
@@ -58,7 +71,20 @@ def _read_frontmatter(path):
 
 def _is_self_report(evidence):
     lowered = evidence.lower()
-    return any(phrase in lowered for phrase in SELF_REPORT_PHRASES)
+    for phrase in SELF_REPORT_PHRASES:
+        if phrase != "got it":
+            if phrase in lowered:
+                return True
+            continue
+        # "got it" alone is self-report; "got it right"/"got it correct"/etc.
+        # is a legitimate description of an outcome, not a self-report.
+        for match in re.finditer(r"got it\b", lowered):
+            remainder = lowered[match.end():].lstrip()
+            if not any(
+                remainder.startswith(safe) for safe in _GOT_IT_SAFE_FOLLOWERS
+            ):
+                return True
+    return False
 
 
 def infer_kind(path):

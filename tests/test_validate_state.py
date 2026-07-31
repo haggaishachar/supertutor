@@ -23,6 +23,13 @@ def test_concept_requires_valid_state_enum():
     assert not any(e.startswith("state:") for e in errors)
 
 
+def test_mastered_concept_got_it_right_is_not_a_self_report_false_positive():
+    # "got it right unaided" is legitimate evidence describing an outcome,
+    # not a self-report — the bare "got it" phrase shouldn't fire here.
+    errors = validate("tests/fixtures/valid/concept-mastered-got-it-right.md", "concept")
+    assert errors == []
+
+
 def test_empty_config_is_valid():
     errors = validate("tests/fixtures/valid/config-empty.md", "config")
     assert errors == []

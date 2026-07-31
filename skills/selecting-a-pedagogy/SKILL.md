@@ -13,7 +13,7 @@ it this session — not every turn.
 ## Process
 
 1. Read the concept file's `state` and `strategies_tried`.
-2. Read every strategy file under `skills/selecting-a-pedagogy/strategies/`
+2. Read every strategy file under this skill's `strategies/` subdirectory
    and check each one's "When to select it" section against the concept's
    type (procedural vs. conceptual, from `goals.md`/how the concept is
    described) and history.

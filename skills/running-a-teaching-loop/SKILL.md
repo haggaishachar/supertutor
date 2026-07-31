@@ -9,10 +9,11 @@ description: Use when actively teaching a curriculum unit - executes worked-exam
 
 Check today's session log (`learner/topics/<topic>/log/YYYY-MM-DD.md`) for a
 `strategy:` field already set for this unit. If present, read that strategy
-file from `skills/selecting-a-pedagogy/strategies/<strategy>.md` and follow
-it. If absent (no `selecting-a-pedagogy` pass has run yet for this unit,
-or this is genuinely first exposure), default to `worked-examples` — this is
-the correct default for first exposure to a procedural concept, not a
+file from the `strategies/` subdirectory of the `selecting-a-pedagogy` skill
+(a sibling skill directory — not nested under this one) and follow it. If
+absent (no `selecting-a-pedagogy` pass has run yet for this unit, or this is
+genuinely first exposure), default to `worked-examples` — this is the
+correct default for first exposure to a procedural concept, not a
 placeholder.
 
 ## The three-phase shape

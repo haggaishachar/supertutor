@@ -1,5 +1,7 @@
+import glob
+
 import pytest
-from tools.validate_state import validate
+from tools.validate_state import infer_kind, validate
 
 
 def test_valid_mastered_concept_has_no_errors():
@@ -96,3 +98,22 @@ def test_infer_kind_returns_none_for_unrecognized_path():
     from tools.validate_state import infer_kind
 
     assert infer_kind("learner/topics/calculus-limits/README.md") is None
+
+
+def test_real_committed_learner_directory_has_zero_validation_errors():
+    # Integration check for the Task 22 dogfood run's output, committed at
+    # the repo root — walks every file the same way the CLI does and
+    # asserts the whole directory is schema-valid.
+    paths = sorted(glob.glob("learner/**/*.md", recursive=True))
+    assert paths, "expected learner/ to contain committed dogfood state files"
+
+    failures = {}
+    for path in paths:
+        kind = infer_kind(path)
+        if kind is None:
+            continue  # not every file under learner/ maps to a schema kind
+        errors = validate(path, kind)
+        if errors:
+            failures[path] = errors
+
+    assert failures == {}

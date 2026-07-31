@@ -226,3 +226,28 @@ def _validate_log(fm):
         if field not in fm:
             errors.append(f"{field}: required")
     return errors
+
+
+if __name__ == "__main__":
+    import glob
+    import sys
+
+    if len(sys.argv) != 2:
+        print("usage: python3 -m tools.validate_state <learner-directory>", file=sys.stderr)
+        sys.exit(2)
+
+    root = sys.argv[1]
+    found_errors = False
+    for path in sorted(glob.glob(os.path.join(root, "**", "*.md"), recursive=True)):
+        kind = infer_kind(path)
+        if kind is None:
+            print(f"SKIP {path}: unrecognized path shape")
+            continue
+        errors = validate(path, kind)
+        if errors:
+            found_errors = True
+            print(f"FAIL {path} (kind={kind}):")
+            for e in errors:
+                print(f"  - {e}")
+
+    sys.exit(1 if found_errors else 0)

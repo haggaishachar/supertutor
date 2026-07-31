@@ -18,7 +18,7 @@ to this skill, so state the trigger condition (when to use it) plainly.
 ## Running tests
 
 ```
-pip install pytest
+pip install pytest -r requirements.txt
 python3 -m pytest tests/
 ```
 

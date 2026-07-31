@@ -8,23 +8,52 @@ is process discipline for software engineering.
 
 ## Install (Claude Code)
 
-Add this repo as a plugin marketplace and install it, either straight from
-GitHub:
+This repo is a [Claude Code plugin](https://docs.claude.com/en/docs/claude-code/plugins) —
+a marketplace containing one plugin, `supertutor-skills`, made up of the 14
+Agent Skills under [skills/](skills/). You need the Claude Code CLI installed
+and a session open; run these as slash commands inside that session.
+
+**1. Add the marketplace.** Straight from GitHub:
 
 ```
 /plugin marketplace add haggaishachar/supertutor
-/plugin install supertutor-skills@supertutor
 ```
 
-or from a local clone:
+or, if you've cloned this repo locally and want to work off that copy (e.g.
+to try local edits):
 
 ```
 /plugin marketplace add /path/to/this/repo
+```
+
+**2. Install the plugin:**
+
+```
 /plugin install supertutor-skills@supertutor
 ```
 
-Then start a session and say what you want to learn. `using-supertutor` routes you
-to the right skill from there.
+**3. Verify it's installed** with `/plugin`, which lists installed plugins —
+`supertutor-skills` should appear, or list the 14 skills directly with
+`/skills`.
+
+**To update later**, re-run `/plugin marketplace add` for the same source and
+then `/plugin update supertutor-skills`. To remove it, `/plugin uninstall
+supertutor-skills`.
+
+## Use
+
+Once installed, just tell Claude what you want to learn, e.g. "I want to
+learn linear equations." You don't invoke any skill by name — the
+`using-supertutor` skill fires automatically on any teaching-related message,
+reads the learner's state, and routes to whichever skill owns that moment
+(setting goals, planning a curriculum, diagnosing prior knowledge, teaching,
+checking mastery, spaced review, and so on — see the routing table in
+[skills/using-supertutor/SKILL.md](skills/using-supertutor/SKILL.md)).
+
+All learner state is read from and written to a `learner/` directory in your
+current working directory — see [Learner state](#learner-state) below. Start
+a session from whatever directory holds (or should hold) that learner's
+`learner/` directory, one per learner.
 
 ## What this is
 

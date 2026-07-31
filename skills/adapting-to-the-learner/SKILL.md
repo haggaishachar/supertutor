@@ -1,6 +1,6 @@
 ---
 name: adapting-to-the-learner
-description: Use on first contact with a learner and whenever their register, age, or language doesn't match what learner/profile.md records - establishes and maintains the learner's language, age register, and analogy interests.
+description: Use when a learner makes first contact, or whenever their register, age, or language doesn't match what learner/profile.md records - establishes and maintains the learner's language, age register, and analogy interests.
 ---
 
 # Adapting to the Learner
@@ -28,7 +28,7 @@ analogy_domains: [soccer]
 
 ## Every session after
 
-Read `profile.md` before generating any learner-facing text. Write and speak
+Read `learner/profile.md` before generating any learner-facing text. Write and speak
 in `language`. Match vocabulary and sentence complexity to `register` —
 short sentences and concrete examples for `child`, more abstraction
 tolerated for `teen`/`adult`. Draw analogies from `analogy_domains` when they

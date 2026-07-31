@@ -1,0 +1,12 @@
+{
+  "name": "local",
+  "owner": {
+    "name": "supertutor"
+  },
+  "plugins": [
+    {
+      "name": "supertutor-skills",
+      "source": "./"
+    }
+  ]
+}

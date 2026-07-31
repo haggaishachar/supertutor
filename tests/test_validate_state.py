@@ -42,7 +42,7 @@ def test_full_config_is_valid():
 
 def test_config_rejects_bad_enum():
     errors = validate("tests/fixtures/invalid/config-bad-enum.md", "config")
-    assert any("session_length_hint" in e for e in errors)
+    assert any("review_cadence" in e for e in errors)
 
 
 def test_missing_file_is_valid_for_config_and_profile_only():
@@ -62,7 +62,7 @@ def test_mastered_concept_with_non_string_evidence_returns_error_not_crash():
 
 def test_config_with_non_string_enum_field_returns_error_not_crash():
     errors = validate("tests/fixtures/invalid/config-list-enum.md", "config")
-    assert any("session_length_hint" in e for e in errors)
+    assert any("review_cadence" in e for e in errors)
 
 
 def test_malformed_yaml_frontmatter_returns_error_not_crash():

@@ -28,7 +28,7 @@ This is what keeps the free plugin and the paid service the same product at two 
 
 ## 4. Populating `learner/config.md`
 
-Layer 1 defines this file's key set (mastery threshold, session-length hint, review cadence) and works correctly with it absent. Layer 2's only obligation is to write valid values for whichever keys its product surface wants to expose — e.g., a subscription tier might set a longer session-length hint, or a "review discipline" account setting might tune the review-cadence key. Layer 2 does not add new keys unilaterally; a new knob is a Layer 1 change (§2), proposed the same way any consumer would propose one.
+Layer 1 defines this file's key set (review cadence) and works correctly with it absent. Layer 2's only obligation is to write valid values for whichever keys its product surface wants to expose — e.g., a "review discipline" account setting might tune the review-cadence key. Layer 2 does not add new keys unilaterally; a new knob is a Layer 1 change (§2), proposed the same way any consumer would propose one.
 
 ## 5. Open questions (flagged, not resolved here)
 

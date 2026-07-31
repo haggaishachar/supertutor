@@ -14,7 +14,7 @@ This document specifies Layer 1 only: the skills, the pedagogy strategy system, 
 
 Layer 1 exposes exactly one interface to whatever embeds it: a directory of markdown files at a conventional relative path, described in §6. Nothing in a skill inspects how that directory got there — a local folder on a laptop and a mounted network volume are indistinguishable to a skill, and that's by design, not by accident.
 
-The one narrow exception: skills read `learner/config.md` if present — a small fixed-key file (mastery threshold, session-length hint, review cadence) — and fall back to built-in defaults if it's absent or missing keys. Layer 1 defines the key set and the defaults. It does not define, require, or assume who writes the file, or why.
+The one narrow exception: skills read `learner/config.md` if present — a small fixed-key file (review cadence) — and fall back to built-in defaults if it's absent or missing keys. Layer 1 defines the key set and the defaults. It does not define, require, or assume who writes the file, or why.
 
 **Enforcement, stated so it can be checked mechanically:** Layer 1 ships and versions as a standalone repo/package. Its test suite (skill baselines, schema validation) runs with zero external code present, using only the config-file defaults. If testing Layer 1 ever requires standing up a consumer, the boundary has been violated.
 

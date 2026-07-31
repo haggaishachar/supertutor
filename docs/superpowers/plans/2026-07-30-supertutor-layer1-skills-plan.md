@@ -12,7 +12,7 @@
 
 - Skill frontmatter has exactly two required fields, `name` and `description`; `name` uses letters/numbers/hyphens only; `description` is third-person and starts with "Use when..."; combined frontmatter stays under 1024 characters. (Source: superpowers:writing-skills.)
 - No skill or schema file references accounts, billing, HTTP, sessions-as-billing-units, or any other hosting-layer concept. (Spec §2.)
-- `learner/config.md` keys — `mastery_threshold` (default `3`), `session_length_hint` (default `medium`), `review_cadence` (default `standard`) — are all optional; every skill must work correctly with the file absent. (Spec §2, §4.)
+- `learner/config.md` keys — `review_cadence` (default `standard`) — is optional; every skill must work correctly with the file absent. (Spec §2, §4.)
 - `state: mastered` may be written only by the `mastery-before-advancing` skill, and only with a non-empty `evidence:` line naming a specific demonstration — never a self-report phrase ("learner said...", "learner thinks they understand", "got it"). (Spec §6 — this is the one governing rule enforced by both a skill and the validator.)
 - State file keys, enums, concept IDs, and paths stay in fixed English vocabulary; free-text fields (evidence descriptions, session logs, misconception descriptions) are written in the learner's language. No skill hardcodes English strings for learner-facing output. (Spec §3.)
 - Pedagogy strategies live as markdown reference files, never as separate registered Agent Skills. (Spec §5.)

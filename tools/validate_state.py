@@ -12,7 +12,6 @@ import re
 import yaml
 
 CONCEPT_STATES = {"unknown", "shaky", "known", "mastered"}
-SESSION_LENGTH_HINTS = {"short", "medium", "long"}
 REVIEW_CADENCES = {"relaxed", "standard", "aggressive"}
 
 # Files that are allowed to be absent entirely — everything else must exist.
@@ -146,18 +145,6 @@ def validate(path, kind):
 
 def _validate_config(fm):
     errors = []
-    if "mastery_threshold" in fm and (
-        not isinstance(fm["mastery_threshold"], int)
-        or isinstance(fm["mastery_threshold"], bool)
-    ):
-        errors.append("mastery_threshold: must be an integer")
-    if "session_length_hint" in fm:
-        if not isinstance(fm["session_length_hint"], str):
-            errors.append("session_length_hint: must be a string")
-        elif fm["session_length_hint"] not in SESSION_LENGTH_HINTS:
-            errors.append(
-                f"session_length_hint: must be one of {sorted(SESSION_LENGTH_HINTS)}"
-            )
     if "review_cadence" in fm:
         if not isinstance(fm["review_cadence"], str):
             errors.append("review_cadence: must be a string")

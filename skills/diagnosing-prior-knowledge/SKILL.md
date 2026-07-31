@@ -1,6 +1,6 @@
 ---
 name: diagnosing-prior-knowledge
-description: Use before teaching any unit for the first time, or when a learner signals prior exposure to the topic - elicits what the learner actually knows through diagnostic questions rather than assuming, before any explanation begins.
+description: Use when teaching any unit for the first time, or when a learner signals prior exposure to the topic - elicits what the learner actually knows through diagnostic questions rather than assuming, before any explanation begins.
 ---
 
 # Diagnosing Prior Knowledge
@@ -39,6 +39,10 @@ next_review:
 strategies_tried: []
 ---
 ```
+
+Write `evidence` in the learner's language (per `learner/profile.md`); keep
+`concept`, `state`, and all other keys/paths in the fixed English schema
+vocabulary.
 
 `state` at this stage is `unknown` (no exposure), `shaky` (partial/incorrect
 model), or `known` (correct but untested against an unseen case) — never

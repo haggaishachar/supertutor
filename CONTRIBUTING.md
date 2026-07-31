@@ -19,7 +19,7 @@ to this skill, so state the trigger condition (when to use it) plainly.
 
 ```
 pip install pytest
-pytest tests/
+python3 -m pytest tests/
 ```
 
 `tests/` validates the `learner/` state schema (`tools/validate_state.py`)

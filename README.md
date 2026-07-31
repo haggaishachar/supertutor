@@ -33,7 +33,7 @@ plain markdown files — see the design spec, section 6, for the schema. The
 learner studying linear equations), kept so the schema and tests have a real
 fixture to validate against — replace it with your own learner's state.
 
-`pytest tests/` runs the project's own test suite (fixtures under
+`python3 -m pytest tests/` runs the project's own test suite (fixtures under
 `tests/fixtures/`, plus an integration check against the committed
 `learner/` directory) — it does not take a directory argument. To validate
 any learner directory against the schema, use the validator's CLI instead:

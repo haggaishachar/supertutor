@@ -2,5 +2,7 @@
   "name": "supertutor-skills",
   "version": "0.1.0",
   "description": "Process discipline for one-on-one tutoring — teaching skills for any subject, age, or level, in the learner's own language.",
-  "author": "supertutor"
+  "author": {
+    "name": "supertutor"
+  }
 }

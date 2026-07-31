@@ -45,7 +45,8 @@ Config absent means `standard`.
 
 ## On a failed review
 
-Per `retrieval-practice`'s fallback: reset the interval progression back to
-the start (1 day) rather than continuing to lengthen it — a failed recall
-means the concept needs to re-establish itself, not that the schedule was
-merely slightly early.
+Consistent with `retrieval-practice` treating a failed recall as a state
+regression: reset the interval progression back to the start (1 day)
+rather than continuing to lengthen it — a failed recall means the concept
+needs to re-establish itself, not that the schedule was merely slightly
+early.

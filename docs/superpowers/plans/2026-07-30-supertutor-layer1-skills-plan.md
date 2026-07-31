@@ -1142,7 +1142,7 @@ Expected RED (first scenario): subagent gives the answer immediately with no hin
 ```markdown
 ---
 name: withholding-the-answer
-description: Use whenever a learner asks for the answer directly or is visibly stuck during practice - applies a hint ladder before giving the answer, except for arbitrary facts and notation, which should be told directly.
+description: Use when a learner asks for the answer directly or is visibly stuck during practice - applies a hint ladder before giving the answer, except for arbitrary facts and notation, which should be told directly.
 ---
 
 # Withholding the Answer
@@ -1752,7 +1752,7 @@ Expected RED (the "false-confident" persona): subagent takes the claim at face v
 ```markdown
 ---
 name: mastery-before-advancing
-description: Use whenever a learner claims understanding or asks to advance to the next unit - is the only skill permitted to mark a concept mastered, and requires an actual unseen demonstration, never a self-report, before doing so.
+description: Use when a learner claims understanding or asks to advance to the next unit - is the only skill permitted to mark a concept mastered, and requires an actual unseen demonstration, never a self-report, before doing so.
 ---
 
 # Mastery Before Advancing
@@ -1830,7 +1830,7 @@ Expected RED (the "plausibly-wrong" persona — coherent but incorrect reasoning
 ```markdown
 ---
 name: diagnosing-errors
-description: Use whenever a learner gives an incorrect answer during practice - traces the error to its root misconception through follow-up questions rather than simply marking it wrong and supplying the correct answer.
+description: Use when a learner gives an incorrect answer during practice - traces the error to its root misconception through follow-up questions rather than simply marking it wrong and supplying the correct answer.
 ---
 
 # Diagnosing Errors

@@ -30,6 +30,5 @@ follows one of them rather than being selected first.
 
 If varied practice under this strategy still isn't closing the gap after
 two full attempts, this is not a strategy problem — return to
-`diagnosing-errors` (Task 19) to check whether the underlying misconception
-model is even correct, rather than continuing to drill against a
-misdiagnosed gap.
+`diagnosing-errors` to check whether the underlying misconception model is
+even correct, rather than continuing to drill against a misdiagnosed gap.

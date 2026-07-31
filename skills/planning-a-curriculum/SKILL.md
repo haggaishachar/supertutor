@@ -39,8 +39,8 @@ created: 2026-07-30
 `status` is `not_started`, `in_progress`, or `mastered` — kept in sync with
 the corresponding concept file's `state`. When a concept file's `state`
 becomes `mastered`, update the matching unit's `status` to `mastered` in
-the same pass (see `mastery-before-advancing`, Task 18, which owns this
-write for the mastery case).
+the same pass (see `mastery-before-advancing`, which owns this write for
+the mastery case).
 
 ## Re-planning
 

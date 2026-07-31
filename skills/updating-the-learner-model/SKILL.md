@@ -28,8 +28,8 @@ strategies_tried: [worked-examples]
 `evidence` must name what specifically happened — which attempt, what
 level of support was needed — not a feeling. `state` here is `unknown`,
 `shaky`, or `known` — this skill never writes `mastered` (that requires the
-specific unseen-demonstration process in `mastery-before-advancing`, Task
-18, even if today's independent practice went well; one good attempt during
+specific unseen-demonstration process in `mastery-before-advancing`, even
+if today's independent practice went well; one good attempt during
 teaching is not the same as a dedicated mastery check).
 
 If a strategy was used this session, append it to `strategies_tried` if not
@@ -51,9 +51,9 @@ strategy_reason: first exposure to a new procedural skill with no prior attempt 
 [narrative of what happened this session, in the learner's language]
 ```
 
-If `selecting-a-pedagogy` hasn't run yet this session (early builds, before
-Task 12 lands), still record whichever strategy `running-a-teaching-loop`
-actually used and a one-line reason — don't leave the field blank.
+If no strategy has been explicitly selected yet this session for any
+reason, still record whichever strategy `running-a-teaching-loop` actually
+used and a one-line reason — don't leave the field blank.
 
 ## Write in the learner's language
 

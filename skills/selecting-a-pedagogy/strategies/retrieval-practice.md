@@ -3,8 +3,8 @@
 ## When to select it
 
 The concept's `state` is already `known` or `mastered` and it's due for
-review per `learner/topics/<topic>/reviews.md` (see `spaced-review`, Task
-21, which is this strategy's primary caller).
+review per `learner/topics/<topic>/reviews.md` (see `spaced-review`, which
+is this strategy's primary caller).
 
 ## What it does
 

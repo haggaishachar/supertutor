@@ -16,7 +16,7 @@ strategy.
 ## Inputs it needs
 
 The concept, and the specific misconception if one has been diagnosed (see
-`diagnosing-errors`, Task 19) — question toward that gap specifically.
+`diagnosing-errors`) — question toward that gap specifically.
 
 ## Composition
 

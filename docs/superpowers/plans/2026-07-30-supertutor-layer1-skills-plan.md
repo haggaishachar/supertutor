@@ -746,7 +746,7 @@ Expected RED (the "silent one" persona pattern — real prior knowledge that isn
 ```markdown
 ---
 name: diagnosing-prior-knowledge
-description: Use before teaching any unit for the first time, or when a learner signals prior exposure to the topic - elicits what the learner actually knows through diagnostic questions rather than assuming, before any explanation begins.
+description: Use when teaching any unit for the first time, or when a learner signals prior exposure to the topic - elicits what the learner actually knows through diagnostic questions rather than assuming, before any explanation begins.
 ---
 
 # Diagnosing Prior Knowledge
@@ -832,7 +832,7 @@ Expected RED: subagent proposes teaching epsilon-N proofs directly, or gives an 
 ```markdown
 ---
 name: planning-a-curriculum
-description: Use once goals.md exists and curriculum.md doesn't - breaks a learning goal into prerequisite-ordered units, each with an explicit exit check, using the learner's diagnosed prior knowledge to skip what's already known.
+description: Use when goals.md exists and curriculum.md doesn't - breaks a learning goal into prerequisite-ordered units, each with an explicit exit check, using the learner's diagnosed prior knowledge to skip what's already known.
 ---
 
 # Planning a Curriculum
@@ -916,7 +916,7 @@ Expected RED: subagent starts explaining the concept immediately with no mention
 ```markdown
 ---
 name: assessment-first-teaching
-description: Use before beginning instruction on any curriculum unit - writes the mastery check the learner will need to pass before any explanation of the concept begins, so teaching is aimed at a known target.
+description: Use when about to begin instruction on any curriculum unit - writes the mastery check the learner will need to pass before any explanation of the concept begins, so teaching is aimed at a known target.
 ---
 
 # Assessment-First Teaching
@@ -1065,7 +1065,7 @@ Expected RED: subagent explains the concept in one large paragraph, then immedia
 ```markdown
 ---
 name: running-a-teaching-loop
-description: Use while actively teaching a curriculum unit - executes worked-example-to-independent-practice progression using the unit's selected pedagogy strategy, managing cognitive load one idea at a time.
+description: Use when actively teaching a curriculum unit - executes worked-example-to-independent-practice progression using the unit's selected pedagogy strategy, managing cognitive load one idea at a time.
 ---
 
 # Running a Teaching Loop
@@ -1217,7 +1217,7 @@ Expected RED: subagent ends the conversation with a vague closing remark ("great
 ```markdown
 ---
 name: updating-the-learner-model
-description: Use at the end of every teaching interaction - commits what happened to the learner's concept files and session log with specific evidence, never a vague summary.
+description: Use when ending any teaching interaction - commits what happened to the learner's concept files and session log with specific evidence, never a vague summary.
 ---
 
 # Updating the Learner Model
@@ -1314,7 +1314,7 @@ Expected RED: subagent (without this skill, and without `running-a-teaching-loop
 ```markdown
 ---
 name: selecting-a-pedagogy
-description: Use once per curriculum unit before teaching begins (or resumes) - chooses a teaching strategy from the available strategy files based on the concept's type and history, and logs the choice with a reason.
+description: Use when teaching begins or resumes on a curriculum unit, once per unit - chooses a teaching strategy from the available strategy files based on the concept's type and history, and logs the choice with a reason.
 ---
 
 # Selecting a Pedagogy
@@ -2000,7 +2000,7 @@ Expected RED: subagent jumps straight into new curriculum content, ignoring the 
 ```markdown
 ---
 name: spaced-review
-description: Use at the start of any session where reviews.md has concepts due, or when scheduling review after a concept reaches known/mastered - runs retrieval practice on due concepts before new material, and schedules future review intervals.
+description: Use when a session starts with reviews.md concepts due, or when scheduling review after a concept reaches known/mastered - runs retrieval practice on due concepts before new material, and schedules future review intervals.
 ---
 
 # Spaced Review

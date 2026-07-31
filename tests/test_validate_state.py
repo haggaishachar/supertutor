@@ -58,6 +58,16 @@ def test_config_with_non_string_enum_field_returns_error_not_crash():
     assert any("session_length_hint" in e for e in errors)
 
 
+def test_malformed_yaml_frontmatter_returns_error_not_crash():
+    errors = validate("tests/fixtures/invalid/malformed-yaml.md", "concept")
+    assert any("frontmatter" in e for e in errors)
+
+
+def test_non_dict_frontmatter_returns_error_not_crash():
+    errors = validate("tests/fixtures/invalid/non-dict-frontmatter.md", "concept")
+    assert any("frontmatter" in e for e in errors)
+
+
 def test_infer_kind_for_every_path_shape():
     from tools.validate_state import infer_kind
 

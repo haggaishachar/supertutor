@@ -27,8 +27,17 @@ SELF_REPORT_PHRASES = [
 ]
 
 
+class FrontmatterError(Exception):
+    """Raised internally when frontmatter cannot be parsed as a mapping."""
+
+
 def _read_frontmatter(path):
-    """Return the parsed frontmatter dict, or {} if there is none."""
+    """Return the parsed frontmatter dict, or {} if there is none.
+
+    Raises FrontmatterError if the YAML is malformed or parses to something
+    other than a mapping (e.g. a bare list) — callers should turn this into
+    a validation error rather than letting it propagate as a crash.
+    """
     with open(path, "r", encoding="utf-8") as f:
         content = f.read()
     if not content.startswith("---"):
@@ -36,8 +45,15 @@ def _read_frontmatter(path):
     parts = content.split("---", 2)
     if len(parts) < 3:
         return {}
-    parsed = yaml.safe_load(parts[1])
-    return parsed or {}
+    try:
+        parsed = yaml.safe_load(parts[1])
+    except yaml.YAMLError as e:
+        raise FrontmatterError(f"could not be parsed as YAML: {e}") from e
+    if parsed is None:
+        return {}
+    if not isinstance(parsed, dict):
+        raise FrontmatterError("could not be parsed as a mapping")
+    return parsed
 
 
 def _is_self_report(evidence):
@@ -78,7 +94,10 @@ def validate(path, kind):
             return []
         return [f"not found: {path} is required for kind={kind}"]
 
-    fm = _read_frontmatter(path)
+    try:
+        fm = _read_frontmatter(path)
+    except FrontmatterError as e:
+        return [f"frontmatter: {e}"]
 
     if kind == "config":
         return _validate_config(fm)

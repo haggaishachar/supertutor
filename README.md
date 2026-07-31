@@ -1,5 +1,8 @@
 # supertutor-skills
 
+[![test](https://github.com/haggaishachar/supertutor/actions/workflows/test.yml/badge.svg)](https://github.com/haggaishachar/supertutor/actions/workflows/test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Process discipline for one-on-one tutoring, the way [superpowers](https://github.com/obra/superpowers)
 is process discipline for software engineering.
 
@@ -25,7 +28,10 @@ and schedule spaced review. See `docs/superpowers/specs/2026-07-30-supertutor-la
 ## Learner state
 
 Everything the tutor knows about a learner lives in a `learner/` directory of
-plain markdown files — see the design spec, section 6, for the schema.
+plain markdown files — see the design spec, section 6, for the schema. The
+`learner/` directory committed in this repo is a worked example (a fictional
+learner studying linear equations), kept so the schema and tests have a real
+fixture to validate against — replace it with your own learner's state.
 
 `pytest tests/` runs the project's own test suite (fixtures under
 `tests/fixtures/`, plus an integration check against the committed
@@ -39,3 +45,11 @@ python3 -m tools.validate_state learner/
 This walks every `.md` file under the given directory, validates it against
 its inferred schema kind, prints any errors, and exits non-zero if any
 file failed validation.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to add a skill and run tests.
+
+## License
+
+[MIT](LICENSE)

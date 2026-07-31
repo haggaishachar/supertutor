@@ -1,6 +1,6 @@
 ---
 name: withholding-the-answer
-description: Use whenever a learner asks for the answer directly or is visibly stuck during practice - applies a hint ladder before giving the answer, except for arbitrary facts and notation, which should be told directly.
+description: Use when a learner asks for the answer directly or is visibly stuck during practice - applies a hint ladder before giving the answer, except for arbitrary facts and notation, which should be told directly.
 ---
 
 # Withholding the Answer

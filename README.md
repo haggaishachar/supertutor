@@ -8,11 +8,19 @@ is process discipline for software engineering.
 
 ## Install (Claude Code)
 
-Add this repo as a local plugin marketplace and install it:
+Add this repo as a plugin marketplace and install it, either straight from
+GitHub:
+
+```
+/plugin marketplace add haggaishachar/supertutor
+/plugin install supertutor-skills@supertutor
+```
+
+or from a local clone:
 
 ```
 /plugin marketplace add /path/to/this/repo
-/plugin install supertutor-skills@local
+/plugin install supertutor-skills@supertutor
 ```
 
 Then start a session and say what you want to learn. `using-supertutor` routes you

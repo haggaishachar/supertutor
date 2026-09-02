@@ -83,6 +83,7 @@ def test_infer_kind_for_every_path_shape():
     cases = {
         "learner/config.md": "config",
         "learner/profile.md": "profile",
+        "learner/topics/calculus-limits/topic.md": "topic",
         "learner/topics/calculus-limits/goals.md": "goals",
         "learner/topics/calculus-limits/curriculum.md": "curriculum",
         "learner/topics/calculus-limits/knowledge/limits-of-sequences.md": "concept",
@@ -98,6 +99,55 @@ def test_infer_kind_returns_none_for_unrecognized_path():
     from tools.validate_state import infer_kind
 
     assert infer_kind("learner/topics/calculus-limits/README.md") is None
+
+
+def test_missing_topic_file_is_valid():
+    # topic.md is optional (C3) — absent means both language fields
+    # default to profile.md's language, same convention as config/profile.
+    assert validate("tests/fixtures/does-not-exist.md", "topic") == []
+
+
+def test_empty_topic_file_is_valid():
+    errors = validate("tests/fixtures/valid/topic-empty.md", "topic")
+    assert errors == []
+
+
+def test_full_topic_file_is_valid():
+    errors = validate("tests/fixtures/valid/topic-full.md", "topic")
+    assert errors == []
+
+
+def test_config_accepts_homework_strictness():
+    errors = validate("tests/fixtures/valid/config-strictness.md", "config")
+    assert errors == []
+
+
+def test_config_rejects_bad_homework_strictness():
+    errors = validate("tests/fixtures/invalid/config-bad-strictness.md", "config")
+    assert any("homework_strictness" in e for e in errors)
+
+
+def test_syllabus_mode_curriculum_with_ref_is_valid():
+    errors = validate("tests/fixtures/valid/curriculum-syllabus.md", "curriculum")
+    assert errors == []
+
+
+def test_syllabus_mode_curriculum_requires_a_ref():
+    errors = validate("tests/fixtures/invalid/curriculum-syllabus-no-ref.md", "curriculum")
+    assert any("syllabus_ref" in e for e in errors)
+
+
+def test_self_report_detector_is_pluggable():
+    # C2: a binding may swap in its own detector rather than the
+    # English-only default — e.g. one that never fires, or a
+    # locale-appropriate one. Confirms the parameter actually changes
+    # behavior rather than just being accepted and ignored.
+    errors = validate(
+        "tests/fixtures/invalid/concept-mastered-self-report.md",
+        "concept",
+        self_report_detector=lambda evidence: False,
+    )
+    assert errors == []
 
 
 def test_real_committed_learner_directory_has_zero_validation_errors():

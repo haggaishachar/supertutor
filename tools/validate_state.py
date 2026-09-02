@@ -1,42 +1,51 @@
-"""Schema validator for supertutor-skills state files.
+"""File-binding validator for supertutor state.
 
-Every state file is a markdown file with an optional YAML frontmatter
-block delimited by `---` lines. This module checks frontmatter fields
-against the schemas defined in docs/superpowers/specs/
-2026-07-30-supertutor-layer1-skills-design.md section 6.
+Every state file is a markdown file with an optional YAML frontmatter block
+delimited by `---` lines. This module is the *file binding*: given a path,
+it infers which schema kind it represents, reads the frontmatter off disk,
+and checks it against the shared state model in `supertutor.schema`. Field
+knowledge — what a concept is, what `mastered` requires — lives there, not
+here (see C1 of docs/superpowers/plans/2026-09-02-state-model-decoupling-
+plan.md). This module owns only what's specific to *this* binding:
+path-kind inference, which files may be entirely absent, and translating
+`supertutor.schema`'s pydantic errors into the plain-string list this CLI
+has always returned.
 """
 
 import os
-import re
 
 import yaml
+from pydantic import ValidationError
 
-CONCEPT_STATES = {"unknown", "shaky", "known", "mastered"}
-REVIEW_CADENCES = {"relaxed", "standard", "aggressive"}
+from supertutor.schema import (
+    Concept,
+    ConceptState,
+    Config,
+    Curriculum,
+    Goals,
+    Misconception,
+    Profile,
+    Reviews,
+    SelfReportDetector,
+    SessionEvent,
+    Topic,
+    default_is_self_report,
+)
 
 # Files that are allowed to be absent entirely — everything else must exist.
-OPTIONAL_KINDS = {"config", "profile"}
+OPTIONAL_KINDS = {"config", "profile", "topic"}
 
-# NOTE: this is an English-phrase heuristic only — it will not catch
-# self-report evidence written in other languages. It exists as a mechanical
-# backstop, not the primary enforcement mechanism: the real rule that
-# `state: mastered` requires a specific demonstration, not a self-report, is
-# enforced by the `mastery-before-advancing` skill at write time (a human/LLM
-# judgment call). This validator cannot substitute for that in general — it
-# only catches the specific English phrasings listed below.
-SELF_REPORT_PHRASES = [
-    "learner said",
-    "learner reported",
-    "learner thinks they understand",
-    "learner claims",
-    "i understand",
-    "got it",
-]
-
-# "got it" alone reads as self-report, but "got it right"/"got it correct"/
-# etc. is legitimate evidence describing an outcome (e.g. "solved 3 unseen
-# problems and got it right unaided") — don't flag those.
-_GOT_IT_SAFE_FOLLOWERS = ("right", "correct", "wrong", "backwards")
+_MODELS = {
+    "config": Config,
+    "profile": Profile,
+    "topic": Topic,
+    "goals": Goals,
+    "curriculum": Curriculum,
+    "concept": Concept,
+    "misconception": Misconception,
+    "reviews": Reviews,
+    "log": SessionEvent,
+}
 
 
 class FrontmatterError(Exception):
@@ -68,24 +77,6 @@ def _read_frontmatter(path):
     return parsed
 
 
-def _is_self_report(evidence):
-    lowered = evidence.lower()
-    for phrase in SELF_REPORT_PHRASES:
-        if phrase != "got it":
-            if phrase in lowered:
-                return True
-            continue
-        # "got it" alone is self-report; "got it right"/"got it correct"/etc.
-        # is a legitimate description of an outcome, not a self-report.
-        for match in re.finditer(r"got it\b", lowered):
-            remainder = lowered[match.end():].lstrip()
-            if not any(
-                remainder.startswith(safe) for safe in _GOT_IT_SAFE_FOLLOWERS
-            ):
-                return True
-    return False
-
-
 def infer_kind(path):
     """Infer the schema `kind` for a state file from its path, relative to
     the `learner/` root (e.g. `learner/topics/<topic>/knowledge/<c>.md`).
@@ -100,6 +91,8 @@ def infer_kind(path):
         return "config"
     if filename == "profile.md":
         return "profile"
+    if filename == "topic.md":
+        return "topic"
     if filename == "goals.md":
         return "goals"
     if filename == "curriculum.md":
@@ -115,9 +108,22 @@ def infer_kind(path):
     return None
 
 
-def validate(path, kind):
+def _format_pydantic_errors(exc: ValidationError) -> list[str]:
+    errors = []
+    for e in exc.errors():
+        field = ".".join(str(p) for p in e["loc"]) or "(root)"
+        errors.append(f"{field}: {e['msg']}")
+    return errors
+
+
+def validate(path, kind, self_report_detector: SelfReportDetector = default_is_self_report):
     """Validate a state file against its schema. Returns a list of error
-    strings; an empty list means the file is valid."""
+    strings; an empty list means the file is valid.
+
+    `self_report_detector` is the file binding's pluggability point for
+    C2's backstop (see `supertutor.schema`'s module note) — pass a
+    locale-appropriate or model-backed detector instead of the English-only
+    default when validating a non-English learner's state."""
     if not os.path.exists(path):
         if kind in OPTIONAL_KINDS:
             return []
@@ -128,103 +134,28 @@ def validate(path, kind):
     except FrontmatterError as e:
         return [f"frontmatter: {e}"]
 
-    if kind == "config":
-        return _validate_config(fm)
-    if kind == "profile":
-        return _validate_profile(fm)
-    if kind == "concept":
-        return _validate_concept(fm)
-    if kind == "goals":
-        return _validate_goals(fm)
-    if kind == "curriculum":
-        return _validate_curriculum(fm)
-    if kind == "misconception":
-        return _validate_misconception(fm)
-    if kind == "reviews":
-        return _validate_reviews(fm)
-    if kind == "log":
-        return _validate_log(fm)
-    return [f"unknown kind: {kind}"]
+    model = _MODELS.get(kind)
+    if model is None:
+        return [f"unknown kind: {kind}"]
 
+    # An entirely empty optional file (no frontmatter at all) reads as
+    # "not filled in yet", same as the file being absent — this is what
+    # lets `profile.md`/`config.md`/`topic.md` exist as a placeholder
+    # before any of their fields are set.
+    if kind in OPTIONAL_KINDS and not fm:
+        return []
 
-def _validate_config(fm):
+    try:
+        parsed = model.model_validate(fm)
+    except ValidationError as exc:
+        return _format_pydantic_errors(exc)
+
     errors = []
-    if "review_cadence" in fm:
-        if not isinstance(fm["review_cadence"], str):
-            errors.append("review_cadence: must be a string")
-        elif fm["review_cadence"] not in REVIEW_CADENCES:
-            errors.append(f"review_cadence: must be one of {sorted(REVIEW_CADENCES)}")
-    return errors
-
-
-def _validate_profile(fm):
-    errors = []
-    if not fm:
-        return errors  # profile is optional too, per OPTIONAL_KINDS
-    for field in ("language", "register"):
-        if field not in fm:
-            errors.append(f"{field}: required when profile.md exists")
-    return errors
-
-
-def _validate_concept(fm):
-    errors = []
-    for field in ("concept", "state", "evidence", "last_assessed"):
-        if field not in fm:
-            errors.append(f"{field}: required")
-    if "state" in fm and fm["state"] not in CONCEPT_STATES:
-        errors.append(f"state: must be one of {sorted(CONCEPT_STATES)}")
-    if fm.get("state") == "mastered" and "evidence" in fm:
-        evidence = fm.get("evidence") or ""
-        if not isinstance(evidence, str):
-            errors.append("evidence: must be a string")
-        elif not evidence.strip():
-            errors.append("evidence: required and non-empty when state is mastered")
-        elif _is_self_report(evidence):
-            errors.append("evidence: reads as self-report, not a specific demonstration")
-    if "strategies_tried" in fm and not isinstance(fm["strategies_tried"], list):
-        errors.append("strategies_tried: must be a list")
-    return errors
-
-
-def _validate_goals(fm):
-    errors = []
-    for field in ("topic", "created"):
-        if field not in fm:
-            errors.append(f"{field}: required")
-    return errors
-
-
-def _validate_curriculum(fm):
-    errors = []
-    for field in ("topic", "created"):
-        if field not in fm:
-            errors.append(f"{field}: required")
-    return errors
-
-
-def _validate_misconception(fm):
-    errors = []
-    for field in ("concept", "slug", "detected", "resolved"):
-        if field not in fm:
-            errors.append(f"{field}: required")
-    if "resolved" in fm and not isinstance(fm["resolved"], bool):
-        errors.append("resolved: must be a boolean")
-    return errors
-
-
-def _validate_reviews(fm):
-    errors = []
-    if "topic" not in fm:
-        errors.append("topic: required")
-    return errors
-
-
-def _validate_log(fm):
-    errors = []
-    for field in ("date", "topic", "unit", "strategy", "strategy_reason"):
-        if field not in fm:
-            errors.append(f"{field}: required")
+    if kind == "concept" and parsed.state == ConceptState.MASTERED:
+        if self_report_detector(parsed.evidence):
+            errors.append(
+                "evidence: reads as self-report, not a specific demonstration"
+            )
     return errors
 
 

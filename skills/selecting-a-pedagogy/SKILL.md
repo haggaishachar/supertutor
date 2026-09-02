@@ -12,11 +12,11 @@ it this session — not every turn.
 
 ## Process
 
-1. Read the concept file's `state` and `strategies_tried`.
+1. Read the concept's `state` and `strategies_tried`.
 2. Read every strategy file under this skill's `strategies/` subdirectory
    and check each one's "When to select it" section against the concept's
-   type (procedural vs. conceptual, from `goals.md`/how the concept is
-   described) and history.
+   type (procedural vs. conceptual, from the topic's goals or how the
+   concept is described) and history.
 3. Never re-select a strategy that's already appeared twice in a row in
    `strategies_tried` for this concept without a clear reason (e.g. the
    strategy's own fallback explicitly says to switch) — repeating a failed
@@ -28,7 +28,7 @@ it this session — not every turn.
 
 ## Recording the choice
 
-Write to today's `learner/topics/<topic>/log/YYYY-MM-DD.md` frontmatter:
+Write to today's session log frontmatter:
 
 ```yaml
 strategy: scaffolding

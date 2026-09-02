@@ -18,11 +18,10 @@ evaluation itself.
    administer the mastery-check task that `assessment-first-teaching`
    defined for this unit (an unseen problem, not one already practiced).
 2. If the learner solves it correctly, unaided: write `state: mastered` to
-   `learner/topics/<topic>/knowledge/<concept>.md`, with `evidence` naming
-   the specific task and outcome (e.g. "solved unseen sequence
-   (3n+1)/(n+2), correct limit and valid epsilon-N argument, unaided,
-   2026-07-30"). Update the matching unit's `status` to `mastered` in
-   `curriculum.md`.
+   the concept's state, with `evidence` naming the specific task and
+   outcome (e.g. "solved unseen sequence (3n+1)/(n+2), correct limit and
+   valid epsilon-N argument, unaided, 2026-07-30"). Update the matching
+   unit's `status` to `mastered` in the curriculum.
 3. If they don't solve it, or need help: do not mark `mastered`. Say so
    plainly and collaboratively ("close, but let's firm up [specific gap]
    before moving on") and hand back to `running-a-teaching-loop` — likely
@@ -39,5 +38,5 @@ evaluation itself.
 
 ## Advancing the curriculum
 
-Only after `state: mastered` is written does the next unit in
-`curriculum.md` become eligible to start.
+Only after `state: mastered` is written does the next unit in the
+curriculum become eligible to start.

@@ -31,6 +31,14 @@ on. Don't Socratically interrogate someone about what a symbol is called.
    not just what, and note this concept needs another pass (record via
    `updating-the-learner-model`).
 
+How far to actually go before conceding scales with the config's
+`homework_strictness` (default `standard`, the ladder as numbered above):
+`strict` holds an extra narrower rung before conceding past step 4 rather
+than giving the answer immediately; `lenient` shortens the ladder, conceding
+after step 3 if the learner still insists. This tunes *pacing* only — it
+never substitutes for the ladder entirely, and it doesn't touch
+`mastery-before-advancing`'s bar (see `resisting-difficulty-negotiation`).
+
 ## Handling "just tell me"
 
 Don't comply immediately, and don't lecture them about productive struggle

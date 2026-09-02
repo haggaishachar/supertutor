@@ -64,9 +64,17 @@ and schedule spaced review. See `docs/superpowers/specs/2026-07-30-supertutor-la
 
 ## Learner state
 
-Everything the tutor knows about a learner lives in a `learner/` directory of
-plain markdown files — see the design spec, section 6, for the schema. The
-`learner/` directory committed in this repo is a worked example (a fictional
+The state model — a profile, a topic's goals, its curriculum, one record per
+concept, misconceptions, a review schedule, a session log — is defined as
+Pydantic models in [`supertutor/schema.py`](supertutor/schema.py); see the
+design spec, section 6, for the narrative version. Files are the *reference*
+binding: everything the tutor knows about a learner lives in a `learner/`
+directory of plain markdown files with YAML frontmatter, checked by
+[`tools/validate_state.py`](tools/validate_state.py) against that same
+schema. A consumer with different storage binds `supertutor.schema`'s models
+to its own reads and writes instead of emulating a directory.
+
+The `learner/` directory committed in this repo is a worked example (a fictional
 learner studying linear equations), kept so the schema and tests have a real
 fixture to validate against — replace it with your own learner's state.
 
@@ -82,6 +90,29 @@ python3 -m tools.validate_state learner/
 This walks every `.md` file under the given directory, validates it against
 its inferred schema kind, prints any errors, and exits non-zero if any
 file failed validation.
+
+### Using the state model from another project
+
+A consumer that isn't running these skills through Claude Code — one binding
+state to its own storage instead of files — installs just the schema:
+
+```
+pip install "supertutor @ git+https://github.com/haggaishachar/supertutor.git@<tag>"
+```
+
+```python
+from supertutor.schema import Concept, ConceptState
+
+concept = Concept(
+    concept="limits-of-sequences",
+    state=ConceptState.MASTERED,
+    evidence="solved 3 unseen epsilon-N proofs unaided, 2026-07-28",
+    last_assessed="2026-07-28",
+)
+```
+
+Pin a tag rather than a branch — Layer 1 versions this contract, and a
+consumer upgrades deliberately.
 
 ## Contributing
 

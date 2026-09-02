@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "supertutor"
+version = "0.2.0"
+description = "Process discipline for one-on-one tutoring — the Layer 1 state model and skills library."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "PyYAML",
+    "pydantic>=2",
+]
+
+[project.urls]
+Repository = "https://github.com/haggaishachar/supertutor"
+
+# `supertutor.schema` is the published interface (C1). `tools` ships
+# alongside it as the file binding's validator/CLI. Skills are consumed as
+# prose by an agent, not imported, and are not part of this distribution
+# yet — a consumer that needs them packaged (e.g. via `importlib.resources`)
+# is tracked as follow-up, not solved by this change.
+[tool.setuptools.packages.find]
+include = ["supertutor*", "tools*"]

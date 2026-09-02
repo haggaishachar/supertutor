@@ -1,7 +1,7 @@
 # Supertutor.app — Layer 2 Design Spec
 
 **Date:** 2026-07-30
-**Status:** Draft for review
+**Status:** Superseded 2026-09-02 — `supertutor.app` as described here is not being built. See `tutorapp/docs/design.md` for the platform actually in development, and `docs/superpowers/plans/2026-09-02-state-model-decoupling-plan.md` (C6, C7) for why this document is kept rather than deleted: it's still the historical record of the design questions Layer 1's consumer contract was checked against.
 **Scope:** `supertutor.app` — the hosted service. Reference-depth only; this is not a full product spec.
 
 ## 1. What this is
@@ -10,10 +10,19 @@ The hosted, paid service that runs the `supertutor-skills` library (Layer 1) for
 
 ## 2. Dependency on Layer 1
 
+> **Amended 2026-09-02** (C6): the "never modify Layer 1" rule below was
+> written to protect Layer 1 from *this* consumer's pressure while a real
+> build was still hypothetical. This document is now superseded (see the
+> header) and `tutorapp` is the only real consumer, so the rule has no
+> second stakeholder left to protect and was retired — replaced by
+> ordinary versioned-release discipline (a consumer pins a tag and upgrades
+> deliberately). Kept here, struck through in spirit rather than the text,
+> as the record of what the rule was and why it no longer applies.
+
 Layer 2 consumes `supertutor-skills` as a versioned, external package. The relationship is one-directional:
 
-- Layer 2 code and configuration may depend on Layer 1's published contract (the skill set, the state-file schema, `learner/config.md`'s key set — see the Layer 1 spec, `2026-07-30-supertutor-layer1-skills-design.md`).
-- Layer 1 must never be modified to make Layer 2 work. If a Layer-2 need requires a skill change, that change is proposed and versioned in the Layer 1 repo like any other consumer's feature request, then adopted here by bumping the pinned skill version — never patched locally.
+- Layer 2 code and configuration may depend on Layer 1's published contract (the skill set, the state model, `learner/config.md`'s key set — see the Layer 1 spec, `2026-07-30-supertutor-layer1-skills-design.md`).
+- ~~Layer 1 must never be modified to make Layer 2 work. If a Layer-2 need requires a skill change, that change is proposed and versioned in the Layer 1 repo like any other consumer's feature request, then adopted here by bumping the pinned skill version — never patched locally.~~ *(Retired 2026-09-02, C6 — see note above.)*
 - Layer 2 runs Layer 1's skills **unmodified**. The only input Layer 2 provides beyond what any consumer could provide is `learner/config.md`, populated per §4 below, using only keys Layer 1 already defines.
 
 This is what keeps the free plugin and the paid service the same product at two depths rather than two diverging codebases.

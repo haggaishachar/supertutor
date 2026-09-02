@@ -1,11 +1,11 @@
 ---
 name: adapting-to-the-learner
-description: Use when a learner makes first contact, or whenever their register, age, or language doesn't match what learner/profile.md records - establishes and maintains the learner's language, age register, and analogy interests.
+description: Use when a learner makes first contact, or whenever their register, age, or language doesn't match what's recorded in their profile - establishes and maintains the learner's language, age register, and analogy interests.
 ---
 
 # Adapting to the Learner
 
-## On first contact (no `learner/profile.md`)
+## On first contact (no profile recorded yet)
 
 Determine, from what the learner already told you or by asking directly:
 
@@ -16,7 +16,8 @@ Determine, from what the learner already told you or by asking directly:
 - **Analogy domains**: 1-3 things the learner is into (sports, games, a
   hobby) — ask once, briefly, don't interrogate.
 
-Write `learner/profile.md`:
+Record the profile (shown here in the file binding's frontmatter shape —
+your binding may expose this as a typed write instead):
 
 ```yaml
 ---
@@ -28,7 +29,7 @@ analogy_domains: [soccer]
 
 ## Every session after
 
-Read `learner/profile.md` before generating any learner-facing text. Write and speak
+Read the profile before generating any learner-facing text. Write and speak
 in `language`. Match vocabulary and sentence complexity to `register` —
 short sentences and concrete examples for `child`, more abstraction
 tolerated for `teen`/`adult`. Draw analogies from `analogy_domains` when they
@@ -42,8 +43,18 @@ subject-level simplicity, not language-level simplicity. A younger child who
 is a native speaker of the interface language needs both. Don't collapse
 these into one setting.
 
+## Mixed-language topics
+
+The profile's `language` is the learner's default interface language — but a
+given topic can override it. A learner studying French *in* Hebrew, or
+coding *in* Japanese where identifiers and error messages are English, needs
+the topic's instruction language and the language of the subject's own
+artifacts tracked separately from this profile and from each other.
+`setting-learning-goals` establishes those fields when a topic is first
+created; this skill owns the profile's own default, not a topic's override.
+
 ## Revisit, don't re-ask
 
 If a learner's phrasing suggests `register` was set wrong (too easy or too
-hard), update `profile.md` — but don't interrogate them about it; infer and
+hard), update the profile — but don't interrogate them about it; infer and
 adjust.

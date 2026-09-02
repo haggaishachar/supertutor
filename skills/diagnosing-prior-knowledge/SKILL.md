@@ -26,8 +26,7 @@ where the fuzziness is.
 
 ## Recording results
 
-For each concept probed, write or update
-`learner/topics/<topic>/knowledge/<concept>.md`:
+For each concept probed, write or update its concept state:
 
 ```yaml
 ---
@@ -40,8 +39,8 @@ strategies_tried: []
 ---
 ```
 
-Write `evidence` in the learner's language (per `learner/profile.md`); keep
-`concept`, `state`, and all other keys/paths in the fixed English schema
+Write `evidence` in the learner's language (per the learner's profile); keep
+`concept`, `state`, and all other keys in the fixed English schema
 vocabulary.
 
 `state` at this stage is `unknown` (no exposure), `shaky` (partial/incorrect

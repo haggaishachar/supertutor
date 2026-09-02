@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "supertutor"
-version = "0.2.0"
+version = "0.2.1"
 description = "Process discipline for one-on-one tutoring — the Layer 1 state model and skills library."
 readme = "README.md"
 license = { text = "MIT" }
@@ -18,9 +18,16 @@ dependencies = [
 Repository = "https://github.com/haggaishachar/supertutor"
 
 # `supertutor.schema` is the published interface (C1). `tools` ships
-# alongside it as the file binding's validator/CLI. Skills are consumed as
-# prose by an agent, not imported, and are not part of this distribution
-# yet — a consumer that needs them packaged (e.g. via `importlib.resources`)
-# is tracked as follow-up, not solved by this change.
+# alongside it as the file binding's validator/CLI. `skills` ships as
+# package data (C8) so a non-file consumer can load skill/strategy prose via
+# `importlib.resources` instead of reading a git checkout at runtime.
 [tool.setuptools.packages.find]
-include = ["supertutor*", "tools*"]
+include = ["supertutor*", "tools*", "skills*"]
+
+# `skills`'s subdirectories (one per skill, plus `selecting-a-pedagogy/
+# strategies/`) are not themselves Python packages — no `__init__.py`, on
+# purpose, since nothing in them is ever imported. `**/*.md` still reaches
+# every SKILL.md and strategy file recursively; `importlib.resources` can
+# `.joinpath()` into them at read time without them being packages.
+[tool.setuptools.package-data]
+skills = ["**/*.md"]

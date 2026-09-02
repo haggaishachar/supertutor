@@ -112,6 +112,24 @@ deliberately. Restore the rule if a second real consumer ever appears.
 that is not being built. Add a superseded header pointing at `tutorapp/docs/design.md`.
 Status-header change only.
 
+## C8 — Package `skills/` as package data
+
+Found building `tutorapp` Phase 0 (Task 5), against this doc's own C1 assumption: a
+non-file consumer loads skill/strategy prose via `importlib.resources`, not by reading a
+git checkout at runtime (the latter would silently reintroduce the filesystem coupling C1
+removed). But `pyproject.toml`'s `[tool.setuptools.packages.find]` only ever included
+`supertutor*` and `tools*` — `skills/` (14 `SKILL.md` files, 6 `selecting-a-pedagogy/
+strategies/*.md` files) was never part of the built wheel at all.
+
+Fixed here: `skills/__init__.py` (a marker only — nothing under `skills/` is ever
+imported, everything under it is read as text) plus `package-data` with a recursive
+`**/*.md` glob, so every `SKILL.md` and strategy file ships without promoting each skill's
+subdirectory to a Python package it has no other reason to be. Verified by building the
+wheel and reading a file back via `importlib.resources.files("skills").joinpath(...)` —
+not just inspecting the config.
+
+Ships as `v0.2.1` — additive and non-breaking, so a patch bump rather than `v0.3.0`.
+
 ## Ordering
 
 | Change | Depends on | When |
@@ -120,6 +138,7 @@ Status-header change only.
 | C2, C3 | — | Independent bug fixes; any time |
 | C6, C7 | — | Any time; trivial |
 | C4, C5 | C1 | Phase 1 |
+| C8 | — | Done — shipped as `v0.2.1`, found and fixed during `tutorapp` Task 5. |
 
 ## Test impact
 

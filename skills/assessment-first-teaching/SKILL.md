@@ -14,8 +14,11 @@ teaching-to-criteria.
 
 ## What the check looks like
 
-Pull directly from the unit's entry in `goals.md`'s observable mastery
-criteria — don't invent a new bar. The check should be:
+Pull directly from the unit's entry in the topic's observable mastery
+criteria (the goals state — see `setting-learning-goals`) — don't invent a
+new bar, and don't relax this when the goal is externally mandated (see
+`setting-learning-goals`'s syllabus mode): the check still comes from the
+recorded criteria, just criteria you didn't author. The check should be:
 
 - **Specific**: a concrete problem or question, not "explain limits."
 - **Unseen**: not identical to any worked example you're about to show —

@@ -27,7 +27,7 @@ that exercises it.
 
 ## Recording
 
-Write `learner/topics/<topic>/misconceptions/<slug>.md`:
+Record a new misconception, scoped to this topic:
 
 ```yaml
 ---
@@ -56,4 +56,4 @@ conceptual, not procedural.
 
 When later evidence shows the learner no longer holds this misconception
 (e.g. correctly handles a similar case unaided), set `resolved: true` — via
-`updating-the-learner-model`, not by silently leaving the file stale.
+`updating-the-learner-model`, not by silently leaving the record stale.
